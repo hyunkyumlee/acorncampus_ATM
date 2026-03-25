@@ -101,7 +101,7 @@ public class AccountAuthServiceImp implements AccountAuthService {
 
         accountAuthService.login("000001", "1234");
         accountAuthService.logout();
-//        accountAuthService.logout();
+
 
         accountAuthService.login("000001", "12345");
         accountAuthService.login("000001", "12345");
