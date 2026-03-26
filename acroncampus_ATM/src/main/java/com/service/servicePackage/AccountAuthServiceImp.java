@@ -4,11 +4,13 @@ import com.entity.Account;
 import com.service.interfacePackage.AccountAuthService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AccountAuthServiceImp implements AccountAuthService {
 
     ArrayList<Account> accounts = new ArrayList<>();
 
+    // 1.1 초기 데이터 세팅 (샘플 계좌 3~5개 생성)
     @Override
     public void initSampleAccounts() {
         accounts.add(new Account("000001", "홍길동", "1234", 1900000));
@@ -26,6 +28,12 @@ public class AccountAuthServiceImp implements AccountAuthService {
             }
         }
         return null;
+    }
+
+    // UI에서 계좌 목록을 표시하기 위해 전체 계좌 리스트를 반환
+    @Override
+    public List<Account> getAccounts() {
+        return this.accounts;
     }
 
     // 로그아웃 해야 로그인 가능한 로직은 외부에서 구현
@@ -66,6 +74,7 @@ public class AccountAuthServiceImp implements AccountAuthService {
         return true;
     }
 
+    // 3.2 로그아웃
     @Override
     public void logout() {
         for(Account account : accounts) {
@@ -76,6 +85,7 @@ public class AccountAuthServiceImp implements AccountAuthService {
         }
     }
 
+    // 3.3 비밀번호 오류 횟수 카운트 및 계좌 잠금
     @Override
     public void handlePasswordError(Account account) {
 

@@ -12,8 +12,7 @@ import java.util.List;
 public class TransactionBalanceService implements TransactionService {
     private final ArrayList<Account> accountList = new ArrayList<>();
     private AtmMachine atmMachine;
-    private static final DateTimeFormatter HISTORY_TIME_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter HISTORY_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public TransactionBalanceService() {
     }
@@ -64,7 +63,7 @@ public class TransactionBalanceService implements TransactionService {
     }
 
     // 거래 유형을 사용자 표시 문자열로 변환
-    private String formatTransactionType(String type) {
+    public String formatTransactionType(String type) {
         if (type.equals("recordDeposit")) {
             return "입금";
         } else if (type.equals("recordWithdraw")) {
@@ -78,7 +77,7 @@ public class TransactionBalanceService implements TransactionService {
     }
 
     // 로그 1건을 반환용 문자열로 변환
-    private String formatHistory(TransactionLog transactionLog) {
+    public String formatHistory(TransactionLog transactionLog) {
         String amountPrefix =
                 (transactionLog.getTransactionType().equals("recordWithdraw")
                         || transactionLog.getTransactionType().equals("recordTransferMinus")) ? "-" : "+";
@@ -92,12 +91,14 @@ public class TransactionBalanceService implements TransactionService {
                 + transactionLog.getBalanceAfter();
     }
 
+    // 2.1 현재 잔액 확인
     @Override
     public long checkBalance(String accountNo) {
         Account account = findAccount(accountNo);
         return account.getBalance();
     }
 
+    // 2.2 현금 입금
     @Override
     public void deposit(String accountNo, long amount) {
         Account account = findAccount(accountNo);
@@ -108,6 +109,7 @@ public class TransactionBalanceService implements TransactionService {
         }
     }
 
+    // 2.3 현금 출금 (잔액 차감 및 단위 제한(2.4), 부족 시 제한)
     @Override
     public void withdraw(String accountNo, long amount) throws Exception {
         Account account = findAccount(accountNo);
@@ -119,6 +121,7 @@ public class TransactionBalanceService implements TransactionService {
         }
     }
 
+    // 4.1 ,4.2 보내는 계좌 차감 + 받는 계좌 합산, 없는 계좌 체크
     @Override
     public void transfer(String fromAccountNo, String toAccountNo, long amount) throws Exception {
         Account fromAccount = findAccount(fromAccountNo);
@@ -132,12 +135,14 @@ public class TransactionBalanceService implements TransactionService {
         recordTransaction(toAccount, "recordTransferPlus", amount);
     }
 
+    // 5.1 입금/출금/이체 발생 시 시간, 금액, 거래 유형 기록
     @Override
     public void recordTransaction(String accountNo, String type, long amount) {
         Account account = findAccount(accountNo);
         recordTransaction(account, type, amount);
     }
 
+    // 5.2 최근 거래 내역 리스트 보기
     @Override
     public List<String> getRecentHistory(String accountNo) {
         Account account = findAccount(accountNo);
