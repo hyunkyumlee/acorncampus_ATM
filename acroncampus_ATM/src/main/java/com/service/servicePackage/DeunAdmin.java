@@ -16,6 +16,10 @@ public class DeunAdmin implements AdminService {
         this.atmMachine = atmMachine;
     }
 
+    public DeunAdmin() {
+
+    }
+
     @Override
     public long checkAtmTotalCash() {   // 기계 안의 총 돈 1
         return atmMachine.getTotalCash();
@@ -27,12 +31,14 @@ public class DeunAdmin implements AdminService {
     public void addAtmCash(long amount) {   // 기계의 돈 채우기 2
          atmMachine.addCash(amount);
          recordAdminLog( "현금추가", amount, LocalDateTime.now());
+         System.out.println("현재 ATM 총금액 : " + atmMachine.getTotalCash() + " 원");
     }
 
     @Override
     public void withdrawAtmCash(long amount) {  // 기계의 돈 빼기 3
         atmMachine.withdrawCash(amount);
         recordAdminLog( "현금회수", amount, LocalDateTime.now());
+        System.out.println("현재 ATM 총금액 : " + atmMachine.getTotalCash() + " 원");
     }
 
     @Override
