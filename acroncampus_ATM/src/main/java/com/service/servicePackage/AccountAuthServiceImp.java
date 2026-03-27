@@ -18,6 +18,12 @@ public class AccountAuthServiceImp implements AccountAuthService {
         // 만약 파일에서 불러온 계좌가 없다면, 샘플 데이터로 초기화
         if (this.accounts.isEmpty()) {
             initSampleAccounts();
+        } else {
+            // 프로그램 시작 시 모든 계좌를 강제로 로그아웃 상태로 만듭니다.
+            // 비정상 종료 등으로 isLogined가 true로 저장된 경우를 방지하기 위함입니다.
+            for (Account account : this.accounts) {
+                account.setLogined(false);
+            }
         }
     }
 
@@ -65,10 +71,6 @@ public class AccountAuthServiceImp implements AccountAuthService {
 
         if (account == null) {
             System.out.println("계좌가 존재하지 않습니다.");
-            return false;
-        }
-        if (account.isLogined()) {
-            System.out.println("로그아웃을 해주세요");
             return false;
         }
         if (account.isLocked()) {
